@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.1.28] - 2026-10-29
+
 ### Fixed
 - **Providers & Stream Resolution**:
   - Extracted signed CDN MP4 streams from MovieBox subject detector links (`/subject-api/get`), restoring movie streaming and multi-resolution playback after upstream restricted play-info with deprecation clips.
