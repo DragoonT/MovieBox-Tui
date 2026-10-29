@@ -695,8 +695,6 @@ async fn download_segment(
                     let bytes = chunk.len().min(remaining as usize);
                     file.write_all(&chunk[..bytes]).await?;
                     written += bytes as u64;
-                    // Workers are aborted without a flush when a sibling pauses or
-                    // fails, so resume progress must exclude bytes still buffered.
                     segment_written.store(written - file.buffer().len() as u64, Ordering::Relaxed);
                     unbatched_bytes += bytes as u64;
                     if unbatched_bytes >= 512 * 1024
@@ -1055,7 +1053,6 @@ mod tests {
         let port = listener.local_addr().unwrap().port();
         let url = format!("http://127.0.0.1:{port}/slow_movie.mp4");
 
-        // Serve ranges slowly so every worker still holds unflushed bytes when paused.
         let server_payload = Arc::clone(&payload);
         let server = tokio::spawn(async move {
             loop {

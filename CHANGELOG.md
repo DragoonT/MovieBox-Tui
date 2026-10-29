@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+### Fixed
+- **Providers & Stream Resolution**:
+  - Extracted signed CDN MP4 streams from MovieBox subject detector links (`/subject-api/get`), restoring movie streaming and multi-resolution playback after upstream restricted play-info with deprecation clips.
+  - Reported explicit error causes when MovieBox serves placeholder clips instead of generic "no streams available", and surfaced upstream HTTP failure statuses directly to the user.
+- **Download Engine & Batch Queue**:
+  - Recorded only flushed bytes to `.part.json` segment progress during downloads, preventing aborted or paused workers from leaving zero-byte gaps and file corruption on resume.
+
+### Changed
+- **Dependencies & Build Infrastructure**:
+  - Upgraded `tokio` to 1.54.1, `scraper` to 0.29.0, `lru` to 0.19.0, `zip` to 9.1.0, `sha2` to 0.11.1, `open` to 5.4.5, `libc` to 0.2.191, and `serde_json` to 1.0.154.
+
 ## [0.1.27] - 2026-10-23
 
 ### Fixed

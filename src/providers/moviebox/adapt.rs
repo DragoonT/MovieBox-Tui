@@ -602,9 +602,6 @@ pub fn moviebox_resource_position_json_to_release(
     None
 }
 
-/// Parses the signed CDN files that subject details list under
-/// `resourceDetectors`, which still point at the real media while
-/// play-info and the resource listing only return the upgrade clip.
 pub fn moviebox_detector_json_to_releases(
     details: &serde_json::Value,
     season: usize,
@@ -627,7 +624,6 @@ pub fn moviebox_detector_json_to_releases(
             items.extend(list.iter().cloned());
             continue;
         }
-        // Some detectors carry a single file without a resolution list.
         let Some(download_url) = detector.get("downloadUrl").and_then(|v| v.as_str()) else {
             continue;
         };
@@ -671,7 +667,6 @@ pub fn moviebox_detector_json_to_releases(
         }
         for mirror in &mut release.mirrors {
             mirror.direct_file = true;
-            // Direct MP4s reject the DASH referer with HTTP 429.
             mirror.headers = vec![("User-Agent".to_string(), user_agent.to_string())];
         }
         releases.push(release);
@@ -679,7 +674,6 @@ pub fn moviebox_detector_json_to_releases(
     releases
 }
 
-/// Reads the resolution from a source page link such as `.../Inception-480P-h265`.
 fn resolution_from_source_link(link: &str) -> Option<u64> {
     let upper = link.to_ascii_uppercase();
     let bytes = upper.as_bytes();
@@ -1104,7 +1098,6 @@ mod tests {
             );
         }
 
-        // Movie detectors never answer for a series episode.
         assert!(moviebox_detector_json_to_releases(&details, 1, 1, "TestAgent").is_empty());
         assert!(moviebox_detector_json_to_releases(&json!({}), 0, 0, "TestAgent").is_empty());
     }
